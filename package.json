@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "module": "/src/main.js",
   "directories": {
     "test": "test"
   },
