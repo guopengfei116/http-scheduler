@@ -1,14 +1,14 @@
-import HttpScheduler from '../../src/http-scheduler';
-import HttpProxy from './http-proxy';
+import Scheduler from '../../src/scheduler';
+import Task from './task';
 
 /**
  * 实际的http请求是macro模式的，
  * 这里为了更清晰的测试结果改为micro模式，
  * 如需真实的运行情况自行修改
  */
-HttpProxy.mode = 'micro';
+Task.mode = 'micro';
 
-const httpScheduler = new HttpScheduler({
+const scheduler = new Scheduler({
   concurrentMax: 2,
   mode: 'normal',
 });
@@ -26,21 +26,21 @@ const httpScheduler = new HttpScheduler({
  * 优缺点：
  *  充分利用闲余时间，但是每个微任务中的请求权重只能在下一次生效。
  */
-httpScheduler.schedule(2, new HttpProxy(2, 'bbbb'));
-httpScheduler.schedule(4, new HttpProxy(4, 'dddd'));
-httpScheduler.schedule(1, new HttpProxy(1, 'aaaa'));
-httpScheduler.schedule(3, new HttpProxy(3, 'cccc'));
+scheduler.schedule(2, new Task(2, 'bbbb'));
+scheduler.schedule(4, new Task(4, 'dddd'));
+scheduler.schedule(1, new Task(1, 'aaaa'));
+scheduler.schedule(3, new Task(3, 'cccc'));
 
 Promise.resolve().then(() => {
-  httpScheduler.schedule(-2, new HttpProxy(-2, 'CCCC'));
-  httpScheduler.schedule(10, new HttpProxy(10, 'jjjj'));
-  httpScheduler.schedule(9, new HttpProxy(9, 'iiii'));
+  scheduler.schedule(-2, new Task(-2, 'CCCC'));
+  scheduler.schedule(10, new Task(10, 'jjjj'));
+  scheduler.schedule(9, new Task(9, 'iiii'));
 });
 
-httpScheduler.schedule(5, new HttpProxy(5, 'eeee'));
-httpScheduler.schedule(0, new HttpProxy(0, 'AAAA'));
-httpScheduler.schedule(6, new HttpProxy(6, 'ffff'));
-httpScheduler.schedule(7, new HttpProxy(7, 'gggg'));
+scheduler.schedule(5, new Task(5, 'eeee'));
+scheduler.schedule(0, new Task(0, 'AAAA'));
+scheduler.schedule(6, new Task(6, 'ffff'));
+scheduler.schedule(7, new Task(7, 'gggg'));
 
-httpScheduler.schedule(-1, new HttpProxy(-1, 'BBBB'));
-httpScheduler.schedule(8, new HttpProxy(8, 'hhhh'));
+scheduler.schedule(-1, new Task(-1, 'BBBB'));
+scheduler.schedule(8, new Task(8, 'hhhh'));
