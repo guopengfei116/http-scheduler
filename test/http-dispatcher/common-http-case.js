@@ -17,6 +17,6 @@ export default function(httpDispatcher) {
       console.log(`请求失败: ${e.message}`);
     });
 
-    return promise;
+    return httpTask;
   };  
 };

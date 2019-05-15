@@ -1,5 +1,7 @@
 export default class HttpTask {
 
+  isRepeal = false;
+
   constructor(httpEngine, method, params) {
     this.httpEngine = httpEngine;
     this.method = method;
@@ -12,14 +14,18 @@ export default class HttpTask {
   }
 
   async exec() {
+    if (this.isRepeal) return;
+
     try {
       const response = await this.httpEngine[this.method](...this.params);
-      this.resolve(response);
-      return true;
+      if (!this.isRepeal) this.resolve(response);
     } catch (e) {
-      this.reject(e);
-      return false;
+      if (!this.isRepeal) this.reject(e);
     }
+  }
+
+  abort() {
+    this.isRepeal = true;
   }
 
   getPromise() {
