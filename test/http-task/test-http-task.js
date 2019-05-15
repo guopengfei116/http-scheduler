@@ -2,9 +2,9 @@ import axios from 'axios';
 import HttpTask from '../../src/http-task';
 
 const axiosPrams = [
-  'http://api.douban.com/v2/movie/in_theaters',
+  'http://localhost:5566/api/movie',
   {
-    params: { count: 5 },
+    params: { count: 3 },
   },
 ];
 const httpTask = new HttpTask(axios, 'get', axiosPrams);
@@ -12,10 +12,10 @@ const httpTask = new HttpTask(axios, 'get', axiosPrams);
 // exec before
 httpTask.getPromise().then((res) => {
   let movies = [];
-  if (res.data && res.data.subjects) {
-    movies = res.data.subjects.map((subject) => subject.title);
-  }
+  if (res.data) movies = res.data.map((movie) => movie.title);
   console.log(`拿到豆瓣电影热映TOP5: ${JSON.stringify(movies)}`);
+}).catch((e) => {
+  console.error(e.message);
 });
 
 httpTask.exec().then(() => {
@@ -25,8 +25,8 @@ httpTask.exec().then(() => {
 // exec after
 httpTask.getPromise().then((res) => {
   let movies = [];
-  if (res.data && res.data.subjects) {
-    movies = res.data.subjects.map((subject) => subject.title);
-  }
+  if (res.data) movies = res.data.map((movie) => movie.title);
   console.log(`拿到豆瓣电影热映TOP5: ${JSON.stringify(movies)}`);
+}).catch((e) => {
+  console.error(e.message);
 });

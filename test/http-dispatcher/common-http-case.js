@@ -1,21 +1,22 @@
 export default function(httpDispatcher) {
   return function(priority) {
     const axiosPrams = [
-      'http://api.douban.com/v2/movie/in_theaters',
+      'http://localhost:5566/api/movie',
       {
         params: { count: Math.abs(priority) },
       },
     ];
-    const promise = httpDispatcher.dispatch(priority, 'get', ...axiosPrams);
+    const httpTask = httpDispatcher.dispatch(priority, 'get', ...axiosPrams);
+    const promise = httpTask.getPromise();
+
     promise.then((res) => {
       let movies = [];
-      if (res.data && res.data.subjects) {
-        movies = res.data.subjects.map((subject) => subject.title);
-      }
+      if (res.data) movies = res.data.map((movie) => movie.title);
       console.log(`拿到豆瓣电影热映TOP5: ${JSON.stringify(movies)}`);
     }).catch((e) => {
-      console.log('请求失败');
+      console.log(`请求失败: ${e.message}`);
     });
+
     return promise;
   };  
 };

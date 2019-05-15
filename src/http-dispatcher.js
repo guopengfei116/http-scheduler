@@ -12,7 +12,7 @@ export default class HttpDispatcher {
   dispatch(priority, method, ...params) {
     const httpTask = new HttpTask(this.httpEngine, method, params);
     this.scheduler.schedule(priority, httpTask);
-    return httpTask.getPromise();
+    return httpTask;
   }
 
 };

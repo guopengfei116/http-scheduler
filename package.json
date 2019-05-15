@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon scripts/server.js"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,10 @@
     "@babel/preset-env": "^7.4.4",
     "@commitlint/cli": "^7.5.2",
     "@commitlint/config-conventional": "^7.5.0",
-    "husky": "^2.2.0"
+    "dynamic-mock-express": "^1.1.2",
+    "express": "^4.16.4",
+    "husky": "^2.2.0",
+    "nodemon": "^1.19.0"
   },
   "dependencies": {
     "axios": "^0.18.0"
