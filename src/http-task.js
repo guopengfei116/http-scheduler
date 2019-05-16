@@ -13,13 +13,18 @@ export default class HttpTask {
     });
   }
 
-  async exec() {
-    if (this.isRepeal) return;
+  async exec(next) {
+    if (this.isRepeal) {
+      next(false);
+      return;
+    }
 
     try {
       const response = await this.httpEngine[this.method](...this.params);
+      next(!this.isRepeal);
       if (!this.isRepeal) this.resolve(response);
     } catch (e) {
+      next(false);
       if (!this.isRepeal) this.reject(e);
     }
   }

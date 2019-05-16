@@ -18,8 +18,8 @@ httpTask.getPromise().then((res) => {
   console.error(e.message);
 });
 
-httpTask.exec().then(() => {
-  console.log(`请求发送成功！`);
+httpTask.exec(() => {
+  console.log(`Http请求已发出！`);
 });
 
 // exec after

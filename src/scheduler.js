@@ -14,22 +14,20 @@ export default class Scheduler extends Event {
     this.init();
   }
 
-  // 创建4个轮回监听器
   init() {
-    Array.from(Array(this.concurrentMax)).forEach(() => {
-      const listener = async () => {
+    [...Array(this.concurrentMax).keys()].forEach((id) => {
+      const executant = () => {
         if (this.queuePriority.isEmpty()) return;
-
-        this.removeEventListener('schedule', listener);
-        const task = this.queuePriority.dequeue();
-        await task.exec();
-        this.addListener('schedule', listener);
-
-        // console.log(this.queuePriority.queue.length);
         // console.log(this.listenerStore);
-        if (!this.queuePriority.isEmpty()) this.dispatchEvent('schedule');
+        this.removeEventListener('schedule', executant);
+        const task = this.queuePriority.dequeue();
+        task.exec(() => {
+          this.addListener('schedule', executant);
+          if (!this.queuePriority.isEmpty()) this.dispatchEvent('schedule');
+        });
       };
-      this.addListener('schedule', listener);
+      executant.$_id = id;
+      this.addListener('schedule', executant);
     });
   }
 

@@ -8,7 +8,8 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "nodemon scripts/server.js"
+    "dev": "nodemon scripts/server.js",
+    "babel-node": "babel-node"
   },
   "repository": {
     "type": "git",

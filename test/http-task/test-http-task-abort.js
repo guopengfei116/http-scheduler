@@ -18,11 +18,13 @@ httpTask.getPromise().then((res) => {
   console.error(e.msg);
 });
 
-httpTask.exec().then(() => {
-  console.log(`请求已发出！`);
+httpTask.exec((isExec) => {
+  if (isExec) console.log('%c%s', 'color: green', '成功发送Http请求');
+  else console.log('%c%s', 'color: red', '请求失败');
 });
 
 httpTask.abort();
+console.log('%c%s', 'color: yellow', '尝试中断Http请求');
 
 // exec after
 httpTask.getPromise().then((res) => {
