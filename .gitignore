@@ -1,1 +1,14 @@
+# Npm Package
 node_modules
+
+# MacOS Finder
+.DS_Store
+
+# Vscode Settings
+.vscode
+
+# Vim Temp Files
+.swp
+
+# Work Plan
+TODO.md
