@@ -4,6 +4,9 @@ const mock = require('dynamic-mock-express');
 
 const app = express();
 
+app.use(express.static(path.resolve(__dirname, '../')));
+app.use(express.static(path.resolve(__dirname, '../example')));
+
 app.use(
   mock({
     mockDir: path.resolve(__dirname, "../mock"),

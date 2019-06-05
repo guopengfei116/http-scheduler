@@ -2,14 +2,15 @@
   "name": "http-scheduler",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "module": "/src/main.js",
+  "main": "dist/bundle-umd.js",
+  "module": "src/main.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "dev": "nodemon scripts/server.js",
-    "babel-node": "babel-node"
+    "babel-node": "babel-node",
+    "build:dev": "rollup --config .rollup.config.js"
   },
   "repository": {
     "type": "git",
@@ -27,15 +28,23 @@
     "@babel/core": "^7.4.4",
     "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@commitlint/cli": "^7.5.2",
     "@commitlint/config-conventional": "^7.5.0",
     "dynamic-mock-express": "^1.1.2",
     "express": "^4.16.4",
     "husky": "^2.2.0",
-    "nodemon": "^1.19.0"
+    "nodemon": "^1.19.0",
+    "rollup": "^1.12.3",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^4.0.4"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "@babel/runtime": "^7.4.4",
+    "@babel/runtime-corejs2": "^7.4.5",
     "axios": "^0.18.0"
   }
 }

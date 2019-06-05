@@ -1,3 +1,6 @@
+# Build Directory
+#dist
+
 # Npm Package
 node_modules
 
