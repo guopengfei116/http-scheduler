@@ -7,9 +7,8 @@ export default function(httpDispatcher) {
       },
     ];
     const httpTask = httpDispatcher.dispatch(priority, 'get', ...axiosPrams);
-    const promise = httpTask.getPromise();
 
-    promise.then((res) => {
+    httpTask.then((res) => {
       let movies = [];
       if (res.data) movies = res.data.map((movie) => movie.title);
       console.log(`拿到豆瓣电影热映TOP5: ${JSON.stringify(movies)}`);
@@ -18,5 +17,5 @@ export default function(httpDispatcher) {
     });
 
     return httpTask;
-  };  
+  };
 };

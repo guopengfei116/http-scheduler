@@ -254,7 +254,6 @@ function () {
     key: "dequeue",
     value: function dequeue() {
       var queueItem = this.queue.pop();
-      console.log(this.queue, queueItem);
       return queueItem && queueItem.item;
     }
   }, {
@@ -509,7 +508,15 @@ function () {
 
       var httpTask = new HttpTask(this.httpEngine, method, params);
       this.scheduler.schedule(priority, httpTask);
-      return httpTask;
+      return HttpDispatcher.wrap(httpTask);
+    }
+  }], [{
+    key: "wrap",
+    value: function wrap(task) {
+      var p = task.getPromise();
+      p.getPromise = task.getPromise.bind(task);
+      p.abort = task.abort.bind(task);
+      return p;
     }
   }]);
 

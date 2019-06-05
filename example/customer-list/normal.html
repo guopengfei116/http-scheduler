@@ -20,9 +20,8 @@
           },
         ];
         const httpTask = httpDispatcher.dispatch(priority, 'get', ...axiosPrams);
-        const promise = httpTask.getPromise();
 
-        promise.then((res) => {
+        httpTask.then((res) => {
           let movies = [];
           if (res.data) movies = res.data.map((movie) => movie.title);
           console.log(`拿到豆瓣电影热映TOP5: ${JSON.stringify(movies)}`);
@@ -41,25 +40,25 @@
     });
 
     const requestHelper = getRequestHelper(httpScheduler);
-    requestHelper(3).getPromise().then(() => console.log(3));
-    requestHelper(7).getPromise().then(() => console.log(7));
-    requestHelper(2).getPromise().then(() => console.log(2));
-    requestHelper(4).getPromise().then(() => console.log(4));
+    requestHelper(3).then(() => console.log(3));
+    requestHelper(7).then(() => console.log(7));
+    requestHelper(2).then(() => console.log(2));
+    requestHelper(4).then(() => console.log(4));
 
     Promise.resolve().then(() => {
-      requestHelper(5).getPromise().then(() => console.log(5));
-      requestHelper(6).getPromise().then(() => console.log(6));
+      requestHelper(5).then(() => console.log(5));
+      requestHelper(6).then(() => console.log(6));
     });
 
     setTimeout(() => {
-      requestHelper(8).getPromise().then(() => console.log(8));
-      requestHelper(1).getPromise().then(() => console.log(1));
+      requestHelper(8).then(() => console.log(8));
+      requestHelper(1).then(() => console.log(1));
     }, 0);
 
     // 取消功能测试用例
     setTimeout(() => {
       const task10 = requestHelper(10);
-      task10.getPromise().then(() => console.log(10));
+      task10.then(() => console.log(10));
       task10.abort();
     }, 0);
   </script>

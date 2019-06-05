@@ -9,10 +9,17 @@ export default class HttpDispatcher {
     this.scheduler = new Scheduler(arg);
   }
 
+  static wrap(task) {
+    const p = task.getPromise();
+    p.getPromise = task.getPromise.bind(task);
+    p.abort = task.abort.bind(task);
+    return p;
+  }
+
   dispatch(priority, method, ...params) {
     const httpTask = new HttpTask(this.httpEngine, method, params);
     this.scheduler.schedule(priority, httpTask);
-    return httpTask;
+    return HttpDispatcher.wrap(httpTask);
   }
 
 };

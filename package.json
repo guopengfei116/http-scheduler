@@ -1,23 +1,32 @@
 {
   "name": "http-scheduler",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "HTTP requests by priority",
   "main": "dist/bundle-umd.js",
   "module": "src/main.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
+    "start": "npm run dev",
     "dev": "nodemon scripts/server.js",
-    "babel-node": "babel-node",
+    "babel-node": "babel-node --config-file ./babel.node.config.js",
     "build:dev": "rollup --config .rollup.config.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/guopengfei116/http-scheduler.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "xhr",
+    "ajax",
+    "http",
+    "request",
+    "priority",
+    "promise",
+    "node"
+  ],
+  "author": "PengfeiGuo",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/guopengfei116/http-scheduler/issues"
