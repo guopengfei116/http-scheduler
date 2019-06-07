@@ -1,6 +1,6 @@
 {
   "name": "http-scheduler",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "HTTP requests by priority",
   "main": "dist/bundle-umd.js",
   "module": "src/main.js",
@@ -54,6 +54,6 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.4.4",
     "@babel/runtime-corejs2": "^7.4.5",
-    "axios": "^0.18.0"
+    "axios": "^0.18.1"
   }
 }
