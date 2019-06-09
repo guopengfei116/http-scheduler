@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Render Last</title>
+  <script src="../../node_modules/axios/dist/axios.js"></script>
+  <script src="../../node_modules/@babel/polyfill/dist/polyfill.js"></script>
+  <script src="../../dist/bundle-iife.js"></script>
+</head>
+<body style="font-size: 20px">
+  <article>
+    <section>
+      <dl>
+        <dt><h1>搜索：</h1></dt>
+        <dd>输入一个数字，返回数字重复20次后的字符串（响应的时长与数字大小相关，模拟响应时间的不确定性）。</dd>
+        <dd>使用普通搜索按钮依次搜索数字：1、6、2，根据响应时长，最终展示给用户的是20个数字6。</dd>
+        <dd>但是在实际应用场景中，我们会要求以最后一次搜索为准，预期展示20个数字2，而不是数字6。</dd>
+        <dd>然后使用高级搜索按钮一次搜索数字：1、6、2，你会看到令人满意的结果。</dd>
+      </dl>
+      <form action="">
+        <input id="search-content" type="text" name="delay" placeholder="模拟的请求延迟响应时间">
+        <button id="search-btn" type="button">搜索</button>
+        <button id="search-btn2" type="button">高级搜索</button>
+        <button id="clear-btn" type="button">清空</button>
+      </form>
+    </section>
+    <section>
+      <h1>搜索记录：</h1>
+      <textarea id="search-history" cols="60" rows="10"></textarea>
+    </section>
+    <main>
+      <h1>响应结果：</h1>
+      <textarea id="search-result-container" cols="60" rows="10"></textarea>
+    </main>
+  </article>
+  <script type="text/javascript">
+    const searchBtn = document.querySelector('#search-btn');
+    const searchBtn2 = document.querySelector('#search-btn2');
+    const clearBtn = document.querySelector('#clear-btn');
+    const searchContent = document.querySelector('#search-content');
+    const searchHistory = document.querySelector('#search-history');
+    const searchResultContainer = document.querySelector('#search-result-container');
+    const searchAPI = '';
+
+    // 清空
+    clearBtn.addEventListener('click', function() {
+      searchContent.value = '';
+      searchHistory.value = '';
+      searchResultContainer.value = '';
+    });
+
+    // 普通搜索
+    searchBtn.addEventListener('click', function() {
+      searchHistory.value += searchContent.value + ' ';
+
+      axios.get(`/api/search?delay=${searchContent.value}`).then((res) => {
+        searchResultContainer.value = res.data.delay;
+      });
+    });
+
+    // 高级搜索
+    const httpScheduler = new HttpScheduler({
+      httpEngine: axios,
+    });
+    let prevTask = null;
+    searchBtn2.addEventListener('click', function() {
+      searchHistory.value += searchContent.value + ' ';
+
+      if (prevTask) prevTask.abort();
+      prevTask = httpScheduler.dispatch(
+        Infinity, 'get', `/api/search?delay=${searchContent.value}`,
+      );
+      prevTask.then((res) => {
+        searchResultContainer.value = res.data.delay;
+      });
+    });
+  </script>
+</body>
+</html>

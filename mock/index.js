@@ -12,5 +12,5 @@ module.exports = {
     "GET:movie/:id": ({store, params}) => {
       return store.movies.filter(movie => movie.id === params.id);
     },
-  }
+  },
 };
