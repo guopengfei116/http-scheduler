@@ -3,14 +3,14 @@ import Event from './event';
 
 export default class Scheduler extends Event {
 
+  static concurrentMax = 4;
   queuePriority = new QueuePriority();
-  concurrentMax = 4;
 
-  constructor(config) {
+  constructor(config = {}) {
     const { concurrentMax, mode } = config;
     super(mode);
 
-    this.concurrentMax = concurrentMax;
+    this.concurrentMax = concurrentMax || Scheduler.concurrentMax;
     this.init();
   }
 

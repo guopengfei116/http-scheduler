@@ -348,8 +348,10 @@
   function (_Event) {
     _inherits(Scheduler, _Event);
 
-    function Scheduler(config) {
+    function Scheduler() {
       var _this;
+
+      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       _classCallCheck(this, Scheduler);
 
@@ -357,8 +359,7 @@
           mode = config.mode;
       _this = _possibleConstructorReturn(this, _getPrototypeOf(Scheduler).call(this, mode));
       _this.queuePriority = new QueuePriority();
-      _this.concurrentMax = 4;
-      _this.concurrentMax = concurrentMax;
+      _this.concurrentMax = concurrentMax || Scheduler.concurrentMax;
 
       _this.init();
 
@@ -400,6 +401,8 @@
 
     return Scheduler;
   }(EventMicro);
+
+  Scheduler.concurrentMax = 4;
 
   var HttpTask =
   /*#__PURE__*/

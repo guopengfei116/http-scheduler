@@ -1,6 +1,6 @@
 {
   "name": "http-scheduler",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "HTTP requests by priority",
   "main": "dist/bundle-umd.js",
   "module": "src/main.js",
@@ -48,7 +48,9 @@
     "rollup": "^1.12.3",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-terser": "^4.0.4"
+    "rollup-plugin-terser": "^4.0.4",
+    "webpack": "^4.33.0",
+    "webpack-cli": "^3.3.3"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
