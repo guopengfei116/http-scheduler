@@ -1,4 +1,4 @@
-var HttpScheduler = (function () {
+var HttpScheduler = (function (exports) {
   'use strict';
 
   function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
@@ -507,8 +507,9 @@ var HttpScheduler = (function () {
         }
 
         var httpTask = new HttpTask(this.httpEngine, method, params);
-        this.scheduler.schedule(priority, httpTask);
-        return HttpDispatcher.wrap(httpTask);
+        this.scheduler.schedule(priority, httpTask); // return HttpDispatcher.wrap(httpTask);
+
+        return HttpDispatcher.wrapPromise(httpTask);
       }
     }], [{
       key: "wrap",
@@ -518,11 +519,45 @@ var HttpScheduler = (function () {
         p.abort = task.abort.bind(task);
         return p;
       }
+    }, {
+      key: "wrapPromise",
+      value: function wrapPromise(task) {
+        var p = task.getPromise();
+        ['then', 'catch', 'finally'].forEach(function (method) {
+          task[method] = p[method].bind(p);
+        });
+        return task;
+      }
     }]);
 
     return HttpDispatcher;
   }();
 
-  return HttpDispatcher;
+  var autoCancel = function () {
+    var preTask = {};
+    return function (task, idGenerator) {
+      var taskId;
 
-}());
+      try {
+        if (typeof idGenerator === 'function') taskId = idGenerator(task);else taskId = task.id || JSON.stringify(task.params);
+
+        if (taskId) {
+          if (preTask[taskId]) preTask[taskId].abort();
+          preTask[taskId] = task;
+        }
+      } catch (e) {}
+
+      return task;
+    };
+  }();
+
+  var taskHelper = /*#__PURE__*/Object.freeze({
+    autoCancel: autoCancel
+  });
+
+  exports.default = HttpDispatcher;
+  exports.taskHelper = taskHelper;
+
+  return exports;
+
+}({}));

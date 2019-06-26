@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('core-js/modules/web.dom.iterable'), require('core-js/modules/es6.array.iterator'), require('core-js/modules/es6.object.to-string'), require('core-js/modules/es6.promise'), require('regenerator-runtime/runtime')) :
-  typeof define === 'function' && define.amd ? define(['core-js/modules/web.dom.iterable', 'core-js/modules/es6.array.iterator', 'core-js/modules/es6.object.to-string', 'core-js/modules/es6.promise', 'regenerator-runtime/runtime'], factory) :
-  (global = global || self, global.HttpScheduler = factory());
-}(this, function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('core-js/modules/web.dom.iterable'), require('core-js/modules/es6.array.iterator'), require('core-js/modules/es6.object.to-string'), require('core-js/modules/es6.promise'), require('regenerator-runtime/runtime')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'core-js/modules/web.dom.iterable', 'core-js/modules/es6.array.iterator', 'core-js/modules/es6.object.to-string', 'core-js/modules/es6.promise', 'regenerator-runtime/runtime'], factory) :
+  (global = global || self, factory(global.HttpScheduler = {}));
+}(this, function (exports) { 'use strict';
 
   function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
     try {
@@ -510,8 +510,9 @@
         }
 
         var httpTask = new HttpTask(this.httpEngine, method, params);
-        this.scheduler.schedule(priority, httpTask);
-        return HttpDispatcher.wrap(httpTask);
+        this.scheduler.schedule(priority, httpTask); // return HttpDispatcher.wrap(httpTask);
+
+        return HttpDispatcher.wrapPromise(httpTask);
       }
     }], [{
       key: "wrap",
@@ -521,11 +522,45 @@
         p.abort = task.abort.bind(task);
         return p;
       }
+    }, {
+      key: "wrapPromise",
+      value: function wrapPromise(task) {
+        var p = task.getPromise();
+        ['then', 'catch', 'finally'].forEach(function (method) {
+          task[method] = p[method].bind(p);
+        });
+        return task;
+      }
     }]);
 
     return HttpDispatcher;
   }();
 
-  return HttpDispatcher;
+  var autoCancel = function () {
+    var preTask = {};
+    return function (task, idGenerator) {
+      var taskId;
+
+      try {
+        if (typeof idGenerator === 'function') taskId = idGenerator(task);else taskId = task.id || JSON.stringify(task.params);
+
+        if (taskId) {
+          if (preTask[taskId]) preTask[taskId].abort();
+          preTask[taskId] = task;
+        }
+      } catch (e) {}
+
+      return task;
+    };
+  }();
+
+  var taskHelper = /*#__PURE__*/Object.freeze({
+    autoCancel: autoCancel
+  });
+
+  exports.default = HttpDispatcher;
+  exports.taskHelper = taskHelper;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));

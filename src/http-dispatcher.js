@@ -16,10 +16,19 @@ export default class HttpDispatcher {
     return p;
   }
 
+  static wrapPromise(task) {
+    const p = task.getPromise();
+    ['then', 'catch', 'finally'].forEach(method => {
+      task[method] = p[method].bind(p);
+    });
+    return task;
+  }
+
   dispatch(priority, method, ...params) {
     const httpTask = new HttpTask(this.httpEngine, method, params);
     this.scheduler.schedule(priority, httpTask);
-    return HttpDispatcher.wrap(httpTask);
+    // return HttpDispatcher.wrap(httpTask);
+    return HttpDispatcher.wrapPromise(httpTask);
   }
 
 };

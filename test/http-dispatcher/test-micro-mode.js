@@ -1,6 +1,6 @@
 import axios from 'axios';
 import HttpDispatcher from '../../src/http-dispatcher';
-import CommonHttpCase from './common-http-case';
+import httpDispatchHelper from '../test-common-helper/http-dispatch-helper';
 
 const httpDispatcher = new HttpDispatcher({
   httpEngine: axios,
@@ -9,7 +9,7 @@ const httpDispatcher = new HttpDispatcher({
 });
 
 // 前两个一定为 7&4，后面的进入同一个宏任务队列
-const commonHttpCase = CommonHttpCase(httpDispatcher);
+const commonHttpCase = httpDispatchHelper(httpDispatcher);
 commonHttpCase(3).then(() => console.log(3));
 commonHttpCase(7).then(() => console.log(7));
 commonHttpCase(2).then(() => console.log(2));

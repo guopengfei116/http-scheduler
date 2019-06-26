@@ -1,5 +1,7 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
 require('core-js/modules/web.dom.iterable');
 require('core-js/modules/es6.array.iterator');
 require('core-js/modules/es6.object.to-string');
@@ -512,8 +514,9 @@ function () {
       }
 
       var httpTask = new HttpTask(this.httpEngine, method, params);
-      this.scheduler.schedule(priority, httpTask);
-      return HttpDispatcher.wrap(httpTask);
+      this.scheduler.schedule(priority, httpTask); // return HttpDispatcher.wrap(httpTask);
+
+      return HttpDispatcher.wrapPromise(httpTask);
     }
   }], [{
     key: "wrap",
@@ -523,9 +526,41 @@ function () {
       p.abort = task.abort.bind(task);
       return p;
     }
+  }, {
+    key: "wrapPromise",
+    value: function wrapPromise(task) {
+      var p = task.getPromise();
+      ['then', 'catch', 'finally'].forEach(function (method) {
+        task[method] = p[method].bind(p);
+      });
+      return task;
+    }
   }]);
 
   return HttpDispatcher;
 }();
 
-module.exports = HttpDispatcher;
+var autoCancel = function () {
+  var preTask = {};
+  return function (task, idGenerator) {
+    var taskId;
+
+    try {
+      if (typeof idGenerator === 'function') taskId = idGenerator(task);else taskId = task.id || JSON.stringify(task.params);
+
+      if (taskId) {
+        if (preTask[taskId]) preTask[taskId].abort();
+        preTask[taskId] = task;
+      }
+    } catch (e) {}
+
+    return task;
+  };
+}();
+
+var taskHelper = /*#__PURE__*/Object.freeze({
+  autoCancel: autoCancel
+});
+
+exports.default = HttpDispatcher;
+exports.taskHelper = taskHelper;
